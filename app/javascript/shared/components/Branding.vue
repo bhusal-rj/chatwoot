@@ -44,7 +44,7 @@ export default {
       globalConfig: {
         brandName,
         logoThumbnail,
-        widgetBrandURL: 'https://rajeshbhusal.com.np',
+        widgetBrandURL: 'https://hyperce.io',
       },
     };
   },
