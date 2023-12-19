@@ -90,7 +90,7 @@ import SubmitButton from '../../../../../components/Button/SubmitButton.vue';
 import { isValidPassword } from 'shared/helpers/Validators';
 import GoogleOAuthButton from '../../../../../components/GoogleOauth/Button.vue';
 import { register } from '../../../../../api/auth';
-var CompanyEmailValidator = require('company-email-validator');
+
 
 export default {
   components: {

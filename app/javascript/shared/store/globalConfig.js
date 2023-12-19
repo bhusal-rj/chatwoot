@@ -11,7 +11,7 @@ const {
   DISPLAY_MANIFEST: displayManifest,
   GIT_SHA: gitSha,
   HCAPTCHA_SITE_KEY: hCaptchaSiteKey,
-  INSTALLATION_NAME: installationName,
+  INSTALLATION_NAME,
   LOGO_THUMBNAIL: logoThumbnail,
   LOGO: logo,
   LOGO_DARK: logoDark,
