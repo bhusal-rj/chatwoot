@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_13_072802) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -94,37 +94,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "address", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "fullName", default: "", null: false
-    t.string "company", default: "", null: false
-    t.string "streetLine1", null: false
-    t.string "streetLine2", default: "", null: false
-    t.string "city", default: "", null: false
-    t.string "province", default: "", null: false
-    t.string "postalCode", default: "", null: false
-    t.string "phoneNumber", default: "", null: false
-    t.boolean "defaultShippingAddress", default: false, null: false
-    t.boolean "defaultBillingAddress", default: false, null: false
-    t.integer "customerId"
-    t.integer "countryId"
-    t.index ["countryId"], name: "IDX_d87215343c3a3a67e6a0b7f3ea"
-    t.index ["customerId"], name: "IDX_dc34d382b493ade1f70e834c4d"
-  end
-
-  create_table "administrator", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.string "firstName", null: false
-    t.string "lastName", null: false
-    t.string "emailAddress", null: false
-    t.integer "userId"
-    t.index ["emailAddress"], name: "UQ_154f5c538b1576ccc277b1ed631", unique: true
-    t.index ["userId"], name: "REL_1966e18ce6a39a82b19204704d", unique: true
-  end
-
   create_table "agent_bot_inboxes", force: :cascade do |t|
     t.integer "inbox_id"
     t.integer "agent_bot_id"
@@ -168,34 +137,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["slug"], name: "index_articles_on_slug", unique: true
   end
 
-  create_table "asset", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "name", null: false
-    t.string "type", null: false
-    t.string "mimeType", null: false
-    t.integer "width", default: 0, null: false
-    t.integer "height", default: 0, null: false
-    t.integer "fileSize", null: false
-    t.string "source", null: false
-    t.string "preview", null: false
-    t.text "focalPoint"
-  end
-
-  create_table "asset_channels_channel", primary_key: ["assetId", "channelId"], force: :cascade do |t|
-    t.integer "assetId", null: false
-    t.integer "channelId", null: false
-    t.index ["assetId"], name: "IDX_dc4e7435f9f5e9e6436bebd33b"
-    t.index ["channelId"], name: "IDX_16ca9151a5153f1169da5b7b7e"
-  end
-
-  create_table "asset_tags_tag", primary_key: ["assetId", "tagId"], force: :cascade do |t|
-    t.integer "assetId", null: false
-    t.integer "tagId", null: false
-    t.index ["assetId"], name: "IDX_9e412b00d4c6cee1a4b3d92071"
-    t.index ["tagId"], name: "IDX_fb5e800171ffbe9823f2cc727f"
-  end
-
   create_table "attachments", id: :serial, force: :cascade do |t|
     t.integer "file_type", default: 0
     t.string "external_url"
@@ -231,24 +172,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["created_at"], name: "index_audits_on_created_at"
     t.index ["request_uuid"], name: "index_audits_on_request_uuid"
     t.index ["user_id", "user_type"], name: "user_index"
-  end
-
-  create_table "authentication_method", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "identifier"
-    t.string "passwordHash"
-    t.string "verificationToken"
-    t.string "passwordResetToken"
-    t.string "identifierChangeToken"
-    t.string "pendingIdentifier"
-    t.string "strategy"
-    t.string "externalIdentifier"
-    t.text "metadata"
-    t.string "type", null: false
-    t.integer "userId"
-    t.index ["type"], name: "IDX_a23445b2c942d8dfcae15b8de2"
-    t.index ["userId"], name: "IDX_00cbe87bc0d4e36758d61bd31d"
   end
 
   create_table "automation_rules", force: :cascade do |t|
@@ -308,34 +231,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.string "slug", null: false
     t.bigint "parent_category_id"
     t.bigint "associated_category_id"
+    t.string "icon", default: ""
     t.index ["associated_category_id"], name: "index_categories_on_associated_category_id"
     t.index ["locale", "account_id"], name: "index_categories_on_locale_and_account_id"
     t.index ["locale"], name: "index_categories_on_locale"
     t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
     t.index ["slug", "locale", "portal_id"], name: "index_categories_on_slug_and_locale_and_portal_id", unique: true
-  end
-
-  create_table "channel", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "code", null: false
-    t.string "token", null: false
-    t.string "description", default: ""
-    t.string "defaultLanguageCode", null: false
-    t.text "availableLanguageCodes"
-    t.string "defaultCurrencyCode", null: false
-    t.text "availableCurrencyCodes"
-    t.boolean "trackInventory", default: true, null: false
-    t.integer "outOfStockThreshold", default: 0, null: false
-    t.boolean "pricesIncludeTax", null: false
-    t.integer "sellerId"
-    t.integer "defaultTaxZoneId"
-    t.integer "defaultShippingZoneId"
-    t.index ["code"], name: "UQ_06127ac6c6d913f4320759971db", unique: true
-    t.index ["defaultShippingZoneId"], name: "IDX_c9ca2f58d4517460435cbd8b4c"
-    t.index ["defaultTaxZoneId"], name: "IDX_afe9f917a1c82b9e9e69f7c612"
-    t.index ["sellerId"], name: "IDX_af2116c7e176b6b88dceceeb74"
-    t.index ["token"], name: "UQ_842699fce4f3470a7d06d89de88", unique: true
   end
 
   create_table "channel_api", force: :cascade do |t|
@@ -479,62 +380,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["phone_number"], name: "index_channel_whatsapp_on_phone_number", unique: true
   end
 
-  create_table "collection", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.boolean "isRoot", default: false, null: false
-    t.integer "position", null: false
-    t.boolean "isPrivate", default: false, null: false
-    t.text "filters", null: false
-    t.boolean "inheritFilters", default: true, null: false
-    t.integer "parentId"
-    t.integer "featuredAssetId"
-    t.index ["featuredAssetId"], name: "IDX_7256fef1bb42f1b38156b7449f"
-  end
-
-  create_table "collection_asset", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.integer "assetId", null: false
-    t.integer "position", null: false
-    t.integer "collectionId", null: false
-    t.index ["assetId"], name: "IDX_51da53b26522dc0525762d2de8"
-    t.index ["collectionId"], name: "IDX_1ed9e48dfbf74b5fcbb35d3d68"
-  end
-
-  create_table "collection_channels_channel", primary_key: ["collectionId", "channelId"], force: :cascade do |t|
-    t.integer "collectionId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_7216ab24077cf5cbece7857dbb"
-    t.index ["collectionId"], name: "IDX_cdbf33ffb5d451916125152008"
-  end
-
-  create_table "collection_closure", primary_key: ["id_ancestor", "id_descendant"], force: :cascade do |t|
-    t.integer "id_ancestor", null: false
-    t.integer "id_descendant", null: false
-    t.index ["id_ancestor"], name: "IDX_c309f8cd152bbeaea08491e0c6"
-    t.index ["id_descendant"], name: "IDX_457784c710f8ac9396010441f6"
-  end
-
-  create_table "collection_product_variants_product_variant", primary_key: ["collectionId", "productVariantId"], force: :cascade do |t|
-    t.integer "collectionId", null: false
-    t.integer "productVariantId", null: false
-    t.index ["collectionId"], name: "IDX_6faa7b72422d9c4679e2f186ad"
-    t.index ["productVariantId"], name: "IDX_fb05887e2867365f236d7dd95e"
-  end
-
-  create_table "collection_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.text "description", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_e329f9036210d75caa1d8f2154"
-    t.index ["slug"], name: "IDX_9f9da7d94b0278ea0f7831e1fc"
-  end
-
   create_table "contact_inboxes", force: :cascade do |t|
     t.bigint "contact_id"
     t.bigint "inbox_id"
@@ -671,47 +516,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["user_id"], name: "index_custom_filters_on_user_id"
   end
 
-  create_table "customer", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.string "title"
-    t.string "firstName", null: false
-    t.string "lastName", null: false
-    t.string "phoneNumber"
-    t.string "emailAddress", null: false
-    t.integer "userId"
-    t.boolean "customFields__fix_relational_custom_fields__", comment: "A work-around needed when only relational custom fields are defined on an entity"
-    t.index ["userId"], name: "REL_3f62b42ed23958b120c235f74d", unique: true
-  end
-
-  create_table "customer_channels_channel", primary_key: ["customerId", "channelId"], force: :cascade do |t|
-    t.integer "customerId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_dc9f69207a8867f83b0fd257e3"
-    t.index ["customerId"], name: "IDX_a842c9fe8cd4c8ff31402d172d"
-  end
-
-  create_table "customer_custom_fields_notification_notification_item", primary_key: ["customerId", "notificationItemId"], force: :cascade do |t|
-    t.integer "customerId", null: false
-    t.integer "notificationItemId", null: false
-    t.index ["customerId"], name: "IDX_abe895a39289ce0aae0e4818d3"
-    t.index ["notificationItemId"], name: "IDX_d4919f7de35b4ab978507fcac2"
-  end
-
-  create_table "customer_group", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "name", null: false
-  end
-
-  create_table "customer_groups_customer_group", primary_key: ["customerId", "customerGroupId"], force: :cascade do |t|
-    t.integer "customerId", null: false
-    t.integer "customerGroupId", null: false
-    t.index ["customerGroupId"], name: "IDX_85feea3f0e5e82133605f78db0"
-    t.index ["customerId"], name: "IDX_b823a3c8bf3b78d3ed68736485"
-  end
-
   create_table "dashboard_apps", force: :cascade do |t|
     t.string "title", null: false
     t.jsonb "content", default: []
@@ -746,136 +550,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["name", "account_id"], name: "index_email_templates_on_name_and_account_id", unique: true
   end
 
-  create_table "facet", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.boolean "isPrivate", default: false, null: false
-    t.string "code", null: false
-    t.index ["code"], name: "UQ_0c9a5d053fdf4ebb5f0490b40fd", unique: true
-  end
-
-  create_table "facet_channels_channel", primary_key: ["facetId", "channelId"], force: :cascade do |t|
-    t.integer "facetId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_2a8ea404d05bf682516184db7d"
-    t.index ["facetId"], name: "IDX_ca796020c6d097e251e5d6d2b0"
-  end
-
-  create_table "facet_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_eaea53f44bf9e97790d38a3d68"
-  end
-
-  create_table "facet_value", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "code", null: false
-    t.integer "facetId"
-    t.index ["facetId"], name: "IDX_d101dc2265a7341be3d94968c5"
-  end
-
-  create_table "facet_value_channels_channel", primary_key: ["facetValueId", "channelId"], force: :cascade do |t|
-    t.integer "facetValueId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_e1d54c0b9db3e2eb17faaf5919"
-    t.index ["facetValueId"], name: "IDX_ad690c1b05596d7f52e52ffeed"
-  end
-
-  create_table "facet_value_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_3d6e45823b65de808a66cb1423"
-  end
-
-  create_table "fcm_token", primary_key: ["id", "customerId"], force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "token", null: false
-    t.serial "id", null: false
-    t.integer "customerUserid"
-    t.datetime "customerCreatedat", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "customerUpdatedat", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "customerDeletedat", precision: nil
-    t.string "customerTitle"
-    t.string "customerFirstname", null: false
-    t.string "customerLastname", null: false
-    t.string "customerPhonenumber"
-    t.string "customerEmailaddress", null: false
-    t.serial "customerId", null: false
-    t.boolean "customerCustomFields__fix_relational_custom_fields__", comment: "A work-around needed when only relational custom fields are defined on an entity"
-    t.index ["customerUserid"], name: "REL_618643728bd0f9786a0741717c", unique: true
-  end
-
-  create_table "fcm_token_customer_channels_channel", primary_key: ["fcmTokenId", "fcmTokenCustomerId", "channelId"], force: :cascade do |t|
-    t.integer "fcmTokenId", null: false
-    t.integer "fcmTokenCustomerId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_40d71aa229db7f73416e8408de"
-    t.index ["fcmTokenId", "fcmTokenCustomerId"], name: "IDX_607749d57dde3efc2679318127"
-  end
-
-  create_table "fcm_token_customer_custom_fields_notification_notification_item", primary_key: ["fcmTokenId", "fcmTokenCustomerId", "notificationItemId"], force: :cascade do |t|
-    t.integer "fcmTokenId", null: false
-    t.integer "fcmTokenCustomerId", null: false
-    t.integer "notificationItemId", null: false
-    t.index ["fcmTokenId", "fcmTokenCustomerId"], name: "IDX_89b9df11c67bdc34b9bb1b588e"
-    t.index ["notificationItemId"], name: "IDX_9b7bef537a32b7b71722f4244b"
-  end
-
-  create_table "fcm_token_customer_groups_customer_group", primary_key: ["fcmTokenId", "fcmTokenCustomerId", "customerGroupId"], force: :cascade do |t|
-    t.integer "fcmTokenId", null: false
-    t.integer "fcmTokenCustomerId", null: false
-    t.integer "customerGroupId", null: false
-    t.index ["customerGroupId"], name: "IDX_dae79d005ba5bd8aadcdd77ecf"
-    t.index ["fcmTokenId", "fcmTokenCustomerId"], name: "IDX_c608e880f0d8a9906fae51e091"
-  end
-
   create_table "folders", force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "category_id", null: false
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "fulfillment", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "state", null: false
-    t.string "trackingCode", default: "", null: false
-    t.string "method", null: false
-    t.string "handlerCode", null: false
-  end
-
-  create_table "global_settings", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.text "availableLanguages", null: false
-    t.boolean "trackInventory", default: true, null: false
-    t.integer "outOfStockThreshold", default: 0, null: false
-  end
-
-  create_table "history_entry", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "type", null: false
-    t.boolean "isPublic", null: false
-    t.text "data", null: false
-    t.string "discriminator", null: false
-    t.integer "administratorId"
-    t.integer "customerId"
-    t.integer "orderId"
-    t.index ["administratorId"], name: "IDX_92f8c334ef06275f9586fd0183"
-    t.index ["customerId"], name: "IDX_43ac602f839847fdb91101f30e"
-    t.index ["discriminator"], name: "IDX_f3a761f6bcfabb474b11e1e51f"
-    t.index ["orderId"], name: "IDX_3a05127e67435b4d2332ded7c9"
   end
 
   create_table "inbox_members", id: :serial, force: :cascade do |t|
@@ -935,29 +615,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "settings", default: {}
-  end
-
-  create_table "job_record", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "queueName", null: false
-    t.text "data"
-    t.string "state", null: false
-    t.integer "progress", null: false
-    t.text "result"
-    t.string "error"
-    t.datetime "startedAt"
-    t.datetime "settledAt"
-    t.boolean "isSettled", null: false
-    t.integer "retries", null: false
-    t.integer "attempts", null: false
-  end
-
-  create_table "job_record_buffer", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "bufferId", null: false
-    t.text "job", null: false
   end
 
   create_table "labels", force: :cascade do |t|
@@ -1028,11 +685,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["source_id"], name: "index_messages_on_source_id"
   end
 
-  create_table "migrations", id: :serial, force: :cascade do |t|
-    t.bigint "timestamp", null: false
-    t.string "name", null: false
-  end
-
   create_table "notes", force: :cascade do |t|
     t.text "content", null: false
     t.bigint "account_id", null: false
@@ -1043,20 +695,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["account_id"], name: "index_notes_on_account_id"
     t.index ["contact_id"], name: "index_notes_on_contact_id"
     t.index ["user_id"], name: "index_notes_on_user_id"
-  end
-
-  create_table "notification_item", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "title", null: false
-    t.string "message", null: false
-  end
-
-  create_table "notification_item_customer_customer", primary_key: ["notificationItemId", "customerId"], force: :cascade do |t|
-    t.integer "notificationItemId", null: false
-    t.integer "customerId", null: false
-    t.index ["customerId"], name: "IDX_d6219175609739b6bd6c61f85b"
-    t.index ["notificationItemId"], name: "IDX_57d68c41f047be3430d4f8901d"
   end
 
   create_table "notification_settings", force: :cascade do |t|
@@ -1095,145 +733,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["primary_actor_type", "primary_actor_id"], name: "uniq_primary_actor_per_account_notifications"
     t.index ["secondary_actor_type", "secondary_actor_id"], name: "uniq_secondary_actor_per_account_notifications"
     t.index ["user_id"], name: "index_notifications_on_user_id"
-  end
-
-  create_table "order", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "type", default: "Regular", null: false
-    t.string "code", null: false
-    t.string "state", null: false
-    t.boolean "active", default: true, null: false
-    t.datetime "orderPlacedAt", precision: nil
-    t.text "couponCodes", null: false
-    t.text "shippingAddress", null: false
-    t.text "billingAddress", null: false
-    t.string "currencyCode", null: false
-    t.integer "aggregateOrderId"
-    t.integer "customerId"
-    t.integer "taxZoneId"
-    t.integer "subTotal", null: false
-    t.integer "subTotalWithTax", null: false
-    t.integer "shipping", default: 0, null: false
-    t.integer "shippingWithTax", default: 0, null: false
-    t.index ["aggregateOrderId"], name: "IDX_73a78d7df09541ac5eba620d18"
-    t.index ["code"], name: "IDX_729b3eea7ce540930dbb706949", unique: true
-    t.index ["customerId"], name: "IDX_124456e637cca7a415897dce65"
-  end
-
-  create_table "order_channels_channel", primary_key: ["orderId", "channelId"], force: :cascade do |t|
-    t.integer "orderId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_d0d16db872499e83b15999f8c7"
-    t.index ["orderId"], name: "IDX_0d8e5c204480204a60e151e485"
-  end
-
-  create_table "order_fulfillments_fulfillment", primary_key: ["orderId", "fulfillmentId"], force: :cascade do |t|
-    t.integer "orderId", null: false
-    t.integer "fulfillmentId", null: false
-    t.index ["fulfillmentId"], name: "IDX_4add5a5796e1582dec2877b289"
-    t.index ["orderId"], name: "IDX_f80d84d525af2ffe974e7e8ca2"
-  end
-
-  create_table "order_line", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.integer "quantity", null: false
-    t.integer "orderPlacedQuantity", default: 0, null: false
-    t.boolean "listPriceIncludesTax", null: false
-    t.text "adjustments", null: false
-    t.text "taxLines", null: false
-    t.integer "sellerChannelId"
-    t.integer "shippingLineId"
-    t.integer "productVariantId", null: false
-    t.integer "initialListPrice"
-    t.integer "listPrice", null: false
-    t.integer "taxCategoryId"
-    t.integer "featuredAssetId"
-    t.integer "orderId"
-    t.index ["featuredAssetId"], name: "IDX_9f065453910ea77d4be8e92618"
-    t.index ["orderId"], name: "IDX_239cfca2a55b98b90b6bef2e44"
-    t.index ["productVariantId"], name: "IDX_cbcd22193eda94668e84d33f18"
-    t.index ["sellerChannelId"], name: "IDX_6901d8715f5ebadd764466f7bd"
-    t.index ["shippingLineId"], name: "IDX_dc9ac68b47da7b62249886affb"
-    t.index ["taxCategoryId"], name: "IDX_77be94ce9ec650446617946227"
-  end
-
-  create_table "order_line_reference", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.integer "quantity", null: false
-    t.integer "fulfillmentId"
-    t.integer "modificationId"
-    t.integer "orderLineId", null: false
-    t.integer "refundId"
-    t.string "discriminator", null: false
-    t.index ["discriminator"], name: "IDX_49a8632be8cef48b076446b8b9"
-    t.index ["fulfillmentId"], name: "IDX_06b02fb482b188823e419d37bd"
-    t.index ["modificationId"], name: "IDX_22b818af8722746fb9f206068c"
-    t.index ["orderLineId"], name: "IDX_7d57857922dfc7303604697dbe"
-    t.index ["refundId"], name: "IDX_30019aa65b17fe9ee962893199"
-  end
-
-  create_table "order_modification", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "note", null: false
-    t.text "shippingAddressChange"
-    t.text "billingAddressChange"
-    t.integer "priceChange", null: false
-    t.integer "orderId"
-    t.integer "paymentId"
-    t.integer "refundId"
-    t.index ["orderId"], name: "IDX_1df5bc14a47ef24d2e681f4559"
-    t.index ["paymentId"], name: "REL_ad2991fa2933ed8b7f86a71633", unique: true
-    t.index ["refundId"], name: "REL_cb66b63b6e97613013795eadbd", unique: true
-  end
-
-  create_table "order_promotions_promotion", primary_key: ["orderId", "promotionId"], force: :cascade do |t|
-    t.integer "orderId", null: false
-    t.integer "promotionId", null: false
-    t.index ["orderId"], name: "IDX_67be0e40122ab30a62a9817efe"
-    t.index ["promotionId"], name: "IDX_2c26b988769c0e3b0120bdef31"
-  end
-
-  create_table "payment", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "method", null: false
-    t.string "state", null: false
-    t.string "errorMessage"
-    t.string "transactionId"
-    t.text "metadata", null: false
-    t.integer "amount", null: false
-    t.integer "orderId"
-    t.index ["orderId"], name: "IDX_d09d285fe1645cd2f0db811e29"
-  end
-
-  create_table "payment_method", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "code", default: "", null: false
-    t.boolean "enabled", null: false
-    t.text "checker"
-    t.text "handler", null: false
-  end
-
-  create_table "payment_method_channels_channel", primary_key: ["paymentMethodId", "channelId"], force: :cascade do |t|
-    t.integer "paymentMethodId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_c00e36f667d35031087b382e61"
-    t.index ["paymentMethodId"], name: "IDX_5bcb569635ce5407eb3f264487"
-  end
-
-  create_table "payment_method_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.text "description", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_66187f782a3e71b9e0f5b50b68"
   end
 
   create_table "platform_app_permissibles", force: :cascade do |t|
@@ -1287,221 +786,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["user_id"], name: "index_portals_members_on_user_id"
   end
 
-  create_table "product", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.boolean "enabled", default: true, null: false
-    t.integer "featuredAssetId"
-    t.index ["featuredAssetId"], name: "IDX_91a19e6613534949a4ce6e76ff"
-  end
-
-  create_table "product_asset", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.integer "assetId", null: false
-    t.integer "position", null: false
-    t.integer "productId", null: false
-    t.index ["assetId"], name: "IDX_5888ac17b317b93378494a1062"
-    t.index ["productId"], name: "IDX_0d1294f5c22a56da7845ebab72"
-  end
-
-  create_table "product_channels_channel", primary_key: ["productId", "channelId"], force: :cascade do |t|
-    t.integer "productId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_a51dfbd87c330c075c39832b6e"
-    t.index ["productId"], name: "IDX_26d12be3b5fec6c4adb1d79284"
-  end
-
-  create_table "product_facet_values_facet_value", primary_key: ["productId", "facetValueId"], force: :cascade do |t|
-    t.integer "productId", null: false
-    t.integer "facetValueId", null: false
-    t.index ["facetValueId"], name: "IDX_06e7d73673ee630e8ec50d0b29"
-    t.index ["productId"], name: "IDX_6a0558e650d75ae639ff38e413"
-  end
-
-  create_table "product_option", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.string "code", null: false
-    t.integer "groupId", null: false
-    t.index ["groupId"], name: "IDX_a6debf9198e2fbfa006aa10d71"
-  end
-
-  create_table "product_option_group", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.string "code", null: false
-    t.integer "productId"
-    t.index ["productId"], name: "IDX_a6e91739227bf4d442f23c52c7"
-  end
-
-  create_table "product_option_group_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_93751abc1451972c02e033b766"
-  end
-
-  create_table "product_option_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_a79a443c1f7841f3851767faa6"
-  end
-
-  create_table "product_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.text "description", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_7dbc75cb4e8b002620c4dbfdac"
-    t.index ["slug"], name: "IDX_f4a2ec16ba86d277b6faa0b67b"
-  end
-
-  create_table "product_variant", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.boolean "enabled", default: true, null: false
-    t.string "sku", null: false
-    t.integer "outOfStockThreshold", default: 0, null: false
-    t.boolean "useGlobalOutOfStockThreshold", default: true, null: false
-    t.string "trackInventory", default: "INHERIT", null: false
-    t.integer "productId"
-    t.integer "featuredAssetId"
-    t.integer "taxCategoryId"
-    t.index ["featuredAssetId"], name: "IDX_0e6f516053cf982b537836e21c"
-    t.index ["productId"], name: "IDX_6e420052844edf3a5506d863ce"
-    t.index ["taxCategoryId"], name: "IDX_e38dca0d82fd64c7cf8aac8b8e"
-  end
-
-  create_table "product_variant_asset", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.integer "assetId", null: false
-    t.integer "position", null: false
-    t.integer "productVariantId", null: false
-    t.index ["assetId"], name: "IDX_10b5a2e3dee0e30b1e26c32f5c"
-    t.index ["productVariantId"], name: "IDX_fa21412afac15a2304f3eb35fe"
-  end
-
-  create_table "product_variant_channels_channel", primary_key: ["productVariantId", "channelId"], force: :cascade do |t|
-    t.integer "productVariantId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_d194bff171b62357688a5d0f55"
-    t.index ["productVariantId"], name: "IDX_beeb2b3cd800e589f2213ae99d"
-  end
-
-  create_table "product_variant_facet_values_facet_value", primary_key: ["productVariantId", "facetValueId"], force: :cascade do |t|
-    t.integer "productVariantId", null: false
-    t.integer "facetValueId", null: false
-    t.index ["facetValueId"], name: "IDX_0d641b761ed1dce4ef3cd33d55"
-    t.index ["productVariantId"], name: "IDX_69567bc225b6bbbd732d6c5455"
-  end
-
-  create_table "product_variant_options_product_option", primary_key: ["productVariantId", "productOptionId"], force: :cascade do |t|
-    t.integer "productVariantId", null: false
-    t.integer "productOptionId", null: false
-    t.index ["productOptionId"], name: "IDX_e96a71affe63c97f7fa2f076da"
-    t.index ["productVariantId"], name: "IDX_526f0131260eec308a3bd2b61b"
-  end
-
-  create_table "product_variant_price", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "currencyCode", null: false
-    t.integer "channelId"
-    t.integer "price", null: false
-    t.integer "variantId"
-    t.index ["variantId"], name: "IDX_e6126cd268aea6e9b31d89af9a"
-  end
-
-  create_table "product_variant_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_420f4d6fb75d38b9dca79bc43b"
-  end
-
-  create_table "promotion", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.datetime "startsAt", precision: nil
-    t.datetime "endsAt", precision: nil
-    t.string "couponCode"
-    t.integer "perCustomerUsageLimit"
-    t.boolean "enabled", null: false
-    t.text "conditions", null: false
-    t.text "actions", null: false
-    t.integer "priorityScore", null: false
-  end
-
-  create_table "promotion_channels_channel", primary_key: ["promotionId", "channelId"], force: :cascade do |t|
-    t.integer "promotionId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_0eaaf0f4b6c69afde1e88ffb52"
-    t.index ["promotionId"], name: "IDX_6d9e2c39ab12391aaa374bcdaa"
-  end
-
-  create_table "promotion_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.text "description", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_1cc009e9ab2263a35544064561"
-  end
-
-  create_table "refund", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "method", null: false
-    t.string "reason"
-    t.string "state", null: false
-    t.string "transactionId"
-    t.text "metadata", null: false
-    t.integer "paymentId", null: false
-    t.integer "items", null: false
-    t.integer "shipping", null: false
-    t.integer "adjustment", null: false
-    t.integer "total", null: false
-    t.index ["paymentId"], name: "IDX_1c6932a756108788a361e7d440"
-  end
-
-  create_table "region", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "code", null: false
-    t.string "type", null: false
-    t.boolean "enabled", null: false
-    t.integer "parentId"
-    t.string "discriminator", null: false
-    t.index ["parentId"], name: "IDX_ed0c8098ce6809925a437f42ae"
-  end
-
-  create_table "region_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_1afd722b943c81310705fc3e61"
-  end
-
   create_table "related_categories", force: :cascade do |t|
     t.bigint "category_id"
     t.bigint "related_category_id"
@@ -1532,117 +816,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["user_id"], name: "index_reporting_events_on_user_id"
   end
 
-  create_table "role", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "code", null: false
-    t.string "description", null: false
-    t.text "permissions", null: false
-  end
-
-  create_table "role_channels_channel", primary_key: ["roleId", "channelId"], force: :cascade do |t|
-    t.integer "roleId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_e09dfee62b158307404202b43a"
-    t.index ["roleId"], name: "IDX_bfd2a03e9988eda6a9d1176011"
-  end
-
-  create_table "search_index_item", primary_key: ["languageCode", "productVariantId", "channelId"], force: :cascade do |t|
-    t.string "languageCode", null: false
-    t.boolean "enabled", null: false
-    t.string "productName", null: false
-    t.string "productVariantName", null: false
-    t.text "description", null: false
-    t.string "slug", null: false
-    t.string "sku", null: false
-    t.text "facetIds", null: false
-    t.text "facetValueIds", null: false
-    t.text "collectionIds", null: false
-    t.text "collectionSlugs", null: false
-    t.text "channelIds", null: false
-    t.string "productPreview", null: false
-    t.text "productPreviewFocalPoint"
-    t.string "productVariantPreview", null: false
-    t.text "productVariantPreviewFocalPoint"
-    t.boolean "inStock", default: true, null: false
-    t.boolean "productInStock", default: true, null: false
-    t.integer "productVariantId", null: false
-    t.integer "channelId", null: false
-    t.integer "productId", null: false
-    t.integer "productAssetId"
-    t.integer "productVariantAssetId"
-    t.integer "price", null: false
-    t.integer "priceWithTax", null: false
-    t.index ["description"], name: "IDX_9a5a6a556f75c4ac7bfdd03410"
-    t.index ["productName"], name: "IDX_6fb55742e13e8082954d0436dc"
-    t.index ["productVariantName"], name: "IDX_d8791f444a8bf23fe4c1bc020c"
-  end
-
-  create_table "seller", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.string "name", null: false
-  end
-
-  create_table "session", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "token", null: false
-    t.datetime "expires", precision: nil, null: false
-    t.boolean "invalidated", null: false
-    t.string "authenticationStrategy"
-    t.integer "activeOrderId"
-    t.integer "activeChannelId"
-    t.string "type", null: false
-    t.integer "userId"
-    t.index ["activeChannelId"], name: "IDX_eb87ef1e234444728138302263"
-    t.index ["activeOrderId"], name: "IDX_7a75399a4f4ffa48ee02e98c05"
-    t.index ["token"], name: "IDX_232f8e85d7633bd6ddfad42169", unique: true
-    t.index ["type"], name: "IDX_e5598363000cab9d9116bd5835"
-    t.index ["userId"], name: "IDX_3d2f174ef04fb312fdebd0ddc5"
-  end
-
-  create_table "shipping_line", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.boolean "listPriceIncludesTax", null: false
-    t.text "adjustments", null: false
-    t.text "taxLines", null: false
-    t.integer "shippingMethodId", null: false
-    t.integer "listPrice", null: false
-    t.integer "orderId"
-    t.index ["orderId"], name: "IDX_c9f34a440d490d1b66f6829b86"
-    t.index ["shippingMethodId"], name: "IDX_e2e7642e1e88167c1dfc827fdf"
-  end
-
-  create_table "shipping_method", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.string "code", null: false
-    t.text "checker", null: false
-    t.text "calculator", null: false
-    t.string "fulfillmentHandlerCode", null: false
-  end
-
-  create_table "shipping_method_channels_channel", primary_key: ["shippingMethodId", "channelId"], force: :cascade do |t|
-    t.integer "shippingMethodId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_f2b98dfb56685147bed509acc3"
-    t.index ["shippingMethodId"], name: "IDX_f0a17b94aa5a162f0d422920eb"
-  end
-
-  create_table "shipping_method_translation", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "languageCode", null: false
-    t.string "name", default: "", null: false
-    t.string "description", default: "", null: false
-    t.integer "baseId"
-    t.index ["baseId"], name: "IDX_85ec26c71067ebc84adcd98d1a"
-  end
-
   create_table "sla_policies", force: :cascade do |t|
     t.string "name", null: false
     t.float "frt_threshold"
@@ -1652,67 +825,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_sla_policies_on_account_id"
-  end
-
-  create_table "stock_level", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.integer "stockOnHand", null: false
-    t.integer "stockAllocated", null: false
-    t.integer "productVariantId", null: false
-    t.integer "stockLocationId", null: false
-    t.index ["productVariantId", "stockLocationId"], name: "IDX_7fc20486b8cfd33dc84c96e168", unique: true
-    t.index ["productVariantId"], name: "IDX_9950eae3180f39c71978748bd0"
-    t.index ["stockLocationId"], name: "IDX_984c48572468c69661a0b7b049"
-  end
-
-  create_table "stock_location", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "name", null: false
-    t.string "description", null: false
-  end
-
-  create_table "stock_location_channels_channel", primary_key: ["stockLocationId", "channelId"], force: :cascade do |t|
-    t.integer "stockLocationId", null: false
-    t.integer "channelId", null: false
-    t.index ["channelId"], name: "IDX_ff8150fe54e56a900d5712671a"
-    t.index ["stockLocationId"], name: "IDX_39513fd02a573c848d23bee587"
-  end
-
-  create_table "stock_movement", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "type", null: false
-    t.integer "quantity", null: false
-    t.integer "stockLocationId", null: false
-    t.string "discriminator", null: false
-    t.integer "productVariantId"
-    t.integer "orderLineId"
-    t.index ["discriminator"], name: "IDX_94e15d5f12d355d117390131ac"
-    t.index ["orderLineId"], name: "IDX_d2c8d5fca981cc820131f81aa8"
-    t.index ["productVariantId"], name: "IDX_e65ba3882557cab4febb54809b"
-    t.index ["stockLocationId"], name: "IDX_a2fe7172eeae9f1cca86f8f573"
-  end
-
-  create_table "surcharge", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "description", null: false
-    t.boolean "listPriceIncludesTax", null: false
-    t.string "sku", null: false
-    t.text "taxLines", null: false
-    t.integer "listPrice", null: false
-    t.integer "orderId"
-    t.integer "orderModificationId"
-    t.index ["orderId"], name: "IDX_154eb685f9b629033bd266df7f"
-    t.index ["orderModificationId"], name: "IDX_a49c5271c39cc8174a0535c808"
-  end
-
-  create_table "tag", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "value", null: false
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
@@ -1739,27 +851,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.integer "taggings_count", default: 0
     t.index "lower((name)::text) gin_trgm_ops", name: "tags_name_trgm_idx", using: :gin
     t.index ["name"], name: "index_tags_on_name", unique: true
-  end
-
-  create_table "tax_category", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "name", null: false
-    t.boolean "isDefault", default: false, null: false
-  end
-
-  create_table "tax_rate", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "name", null: false
-    t.boolean "enabled", null: false
-    t.decimal "value", precision: 5, scale: 2, null: false
-    t.integer "categoryId"
-    t.integer "zoneId"
-    t.integer "customerGroupId"
-    t.index ["categoryId"], name: "IDX_7ee3306d7638aa85ca90d67219"
-    t.index ["customerGroupId"], name: "IDX_8b5ab52fc8887c1a769b9276ca"
-    t.index ["zoneId"], name: "IDX_9872fc7de2f4e532fd3230d191"
   end
 
   create_table "team_members", force: :cascade do |t|
@@ -1789,22 +880,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.integer "account_id"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-  end
-
-  create_table "user", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "deletedAt", precision: nil
-    t.string "identifier", null: false
-    t.boolean "verified", default: false, null: false
-    t.datetime "lastLogin", precision: nil
-  end
-
-  create_table "user_roles_role", primary_key: ["userId", "roleId"], force: :cascade do |t|
-    t.integer "userId", null: false
-    t.integer "roleId", null: false
-    t.index ["roleId"], name: "IDX_4be2f7adf862634f5f803d246b"
-    t.index ["userId"], name: "IDX_5f9286e6c25594c6b88c108db7"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -1868,152 +943,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_041615) do
     t.index ["inbox_id"], name: "index_working_hours_on_inbox_id"
   end
 
-  create_table "zone", id: :serial, force: :cascade do |t|
-    t.datetime "createdAt", precision: nil, default: -> { "now()" }, null: false
-    t.datetime "updatedAt", precision: nil, default: -> { "now()" }, null: false
-    t.string "name", null: false
-  end
-
-  create_table "zone_members_region", primary_key: ["zoneId", "regionId"], force: :cascade do |t|
-    t.integer "zoneId", null: false
-    t.integer "regionId", null: false
-    t.index ["regionId"], name: "IDX_b45b65256486a15a104e17d495"
-    t.index ["zoneId"], name: "IDX_433f45158e4e2b2a2f344714b2"
-  end
-
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "address", "customer", column: "customerId", name: "FK_dc34d382b493ade1f70e834c4d3"
-  add_foreign_key "address", "region", column: "countryId", name: "FK_d87215343c3a3a67e6a0b7f3ea9"
-  add_foreign_key "administrator", "user", column: "userId", name: "FK_1966e18ce6a39a82b19204704d7"
-  add_foreign_key "asset_channels_channel", "asset", column: "assetId", name: "FK_dc4e7435f9f5e9e6436bebd33bb", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "asset_channels_channel", "channel", column: "channelId", name: "FK_16ca9151a5153f1169da5b7b7e3", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "asset_tags_tag", "asset", column: "assetId", name: "FK_9e412b00d4c6cee1a4b3d920716", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "asset_tags_tag", "tag", column: "tagId", name: "FK_fb5e800171ffbe9823f2cc727fd", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "authentication_method", "user", column: "userId", name: "FK_00cbe87bc0d4e36758d61bd31d6"
-  add_foreign_key "channel", "seller", column: "sellerId", name: "FK_af2116c7e176b6b88dceceeb74b"
-  add_foreign_key "channel", "zone", column: "defaultShippingZoneId", name: "FK_c9ca2f58d4517460435cbd8b4c9"
-  add_foreign_key "channel", "zone", column: "defaultTaxZoneId", name: "FK_afe9f917a1c82b9e9e69f7c6129"
-  add_foreign_key "collection", "asset", column: "featuredAssetId", name: "FK_7256fef1bb42f1b38156b7449f5", on_delete: :nullify
-  add_foreign_key "collection", "collection", column: "parentId", name: "FK_4257b61275144db89fa0f5dc059"
-  add_foreign_key "collection_asset", "asset", column: "assetId", name: "FK_51da53b26522dc0525762d2de8e", on_delete: :cascade
-  add_foreign_key "collection_asset", "collection", column: "collectionId", name: "FK_1ed9e48dfbf74b5fcbb35d3d686", on_delete: :cascade
-  add_foreign_key "collection_channels_channel", "channel", column: "channelId", name: "FK_7216ab24077cf5cbece7857dbbd", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "collection_channels_channel", "collection", column: "collectionId", name: "FK_cdbf33ffb5d4519161251520083", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "collection_closure", "collection", column: "id_ancestor", name: "FK_c309f8cd152bbeaea08491e0c66", on_delete: :cascade
-  add_foreign_key "collection_closure", "collection", column: "id_descendant", name: "FK_457784c710f8ac9396010441f6c", on_delete: :cascade
-  add_foreign_key "collection_product_variants_product_variant", "collection", column: "collectionId", name: "FK_6faa7b72422d9c4679e2f186ad1", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "collection_product_variants_product_variant", "product_variant", column: "productVariantId", name: "FK_fb05887e2867365f236d7dd95ee"
-  add_foreign_key "collection_translation", "collection", column: "baseId", name: "FK_e329f9036210d75caa1d8f2154a", on_delete: :cascade
-  add_foreign_key "customer", "user", column: "userId", name: "FK_3f62b42ed23958b120c235f74df"
-  add_foreign_key "customer_channels_channel", "channel", column: "channelId", name: "FK_dc9f69207a8867f83b0fd257e30", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "customer_channels_channel", "customer", column: "customerId", name: "FK_a842c9fe8cd4c8ff31402d172d7", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "customer_custom_fields_notification_notification_item", "customer", column: "customerId", name: "FK_abe895a39289ce0aae0e4818d3f", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "customer_custom_fields_notification_notification_item", "notification_item", column: "notificationItemId", name: "FK_d4919f7de35b4ab978507fcac25", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "customer_groups_customer_group", "customer", column: "customerId", name: "FK_b823a3c8bf3b78d3ed68736485c", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "customer_groups_customer_group", "customer_group", column: "customerGroupId", name: "FK_85feea3f0e5e82133605f78db02"
-  add_foreign_key "facet_channels_channel", "channel", column: "channelId", name: "FK_2a8ea404d05bf682516184db7d3", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "facet_channels_channel", "facet", column: "facetId", name: "FK_ca796020c6d097e251e5d6d2b02", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "facet_translation", "facet", column: "baseId", name: "FK_eaea53f44bf9e97790d38a3d68f", on_delete: :cascade
-  add_foreign_key "facet_value", "facet", column: "facetId", name: "FK_d101dc2265a7341be3d94968c5b", on_delete: :cascade
-  add_foreign_key "facet_value_channels_channel", "channel", column: "channelId", name: "FK_e1d54c0b9db3e2eb17faaf5919c", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "facet_value_channels_channel", "facet_value", column: "facetValueId", name: "FK_ad690c1b05596d7f52e52ffeedd", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "facet_value_translation", "facet_value", column: "baseId", name: "FK_3d6e45823b65de808a66cb1423b", on_delete: :cascade
-  add_foreign_key "fcm_token", "user", column: "customerUserid", name: "FK_618643728bd0f9786a0741717c6"
-  add_foreign_key "fcm_token_customer_channels_channel", "channel", column: "channelId", name: "FK_40d71aa229db7f73416e8408de3", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "fcm_token_customer_channels_channel", "fcm_token", column: "fcmTokenId", name: "FK_607749d57dde3efc26793181279", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "fcm_token_customer_custom_fields_notification_notification_item", "fcm_token", column: "fcmTokenId", name: "FK_89b9df11c67bdc34b9bb1b588e5", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "fcm_token_customer_custom_fields_notification_notification_item", "notification_item", column: "notificationItemId", name: "FK_9b7bef537a32b7b71722f4244bd", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "fcm_token_customer_groups_customer_group", "customer_group", column: "customerGroupId", name: "FK_dae79d005ba5bd8aadcdd77ecfc"
-  add_foreign_key "fcm_token_customer_groups_customer_group", "fcm_token", column: "fcmTokenId", name: "FK_c608e880f0d8a9906fae51e0915", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "history_entry", "administrator", column: "administratorId", name: "FK_92f8c334ef06275f9586fd01832"
-  add_foreign_key "history_entry", "customer", column: "customerId", name: "FK_43ac602f839847fdb91101f30ec", on_delete: :cascade
-  add_foreign_key "history_entry", "order", column: "orderId", name: "FK_3a05127e67435b4d2332ded7c9e", on_delete: :cascade
   add_foreign_key "inboxes", "portals"
-  add_foreign_key "notification_item_customer_customer", "customer", column: "customerId", name: "FK_d6219175609739b6bd6c61f85b8"
-  add_foreign_key "notification_item_customer_customer", "notification_item", column: "notificationItemId", name: "FK_57d68c41f047be3430d4f8901df", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "order", "customer", column: "customerId", name: "FK_124456e637cca7a415897dce659"
-  add_foreign_key "order", "order", column: "aggregateOrderId", name: "FK_73a78d7df09541ac5eba620d181"
-  add_foreign_key "order_channels_channel", "channel", column: "channelId", name: "FK_d0d16db872499e83b15999f8c7a", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "order_channels_channel", "order", column: "orderId", name: "FK_0d8e5c204480204a60e151e4853", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "order_fulfillments_fulfillment", "fulfillment", column: "fulfillmentId", name: "FK_4add5a5796e1582dec2877b2898", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "order_fulfillments_fulfillment", "order", column: "orderId", name: "FK_f80d84d525af2ffe974e7e8ca29", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "order_line", "asset", column: "featuredAssetId", name: "FK_9f065453910ea77d4be8e92618f"
-  add_foreign_key "order_line", "channel", column: "sellerChannelId", name: "FK_6901d8715f5ebadd764466f7bde", on_delete: :nullify
-  add_foreign_key "order_line", "order", column: "orderId", name: "FK_239cfca2a55b98b90b6bef2e44f", on_delete: :cascade
-  add_foreign_key "order_line", "product_variant", column: "productVariantId", name: "FK_cbcd22193eda94668e84d33f185"
-  add_foreign_key "order_line", "shipping_line", column: "shippingLineId", name: "FK_dc9ac68b47da7b62249886affba", on_delete: :nullify
-  add_foreign_key "order_line", "tax_category", column: "taxCategoryId", name: "FK_77be94ce9ec6504466179462275"
-  add_foreign_key "order_line_reference", "fulfillment", column: "fulfillmentId", name: "FK_06b02fb482b188823e419d37bd4"
-  add_foreign_key "order_line_reference", "order_line", column: "orderLineId", name: "FK_7d57857922dfc7303604697dbe9", on_delete: :cascade
-  add_foreign_key "order_line_reference", "order_modification", column: "modificationId", name: "FK_22b818af8722746fb9f206068c2"
-  add_foreign_key "order_line_reference", "refund", column: "refundId", name: "FK_30019aa65b17fe9ee9628931991"
-  add_foreign_key "order_modification", "order", column: "orderId", name: "FK_1df5bc14a47ef24d2e681f45598", on_delete: :cascade
-  add_foreign_key "order_modification", "payment", column: "paymentId", name: "FK_ad2991fa2933ed8b7f86a716338"
-  add_foreign_key "order_modification", "refund", column: "refundId", name: "FK_cb66b63b6e97613013795eadbd5"
-  add_foreign_key "order_promotions_promotion", "order", column: "orderId", name: "FK_67be0e40122ab30a62a9817efe0", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "order_promotions_promotion", "promotion", column: "promotionId", name: "FK_2c26b988769c0e3b0120bdef31b", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "payment", "order", column: "orderId", name: "FK_d09d285fe1645cd2f0db811e293"
-  add_foreign_key "payment_method_channels_channel", "channel", column: "channelId", name: "FK_c00e36f667d35031087b382e61b", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "payment_method_channels_channel", "payment_method", column: "paymentMethodId", name: "FK_5bcb569635ce5407eb3f264487d", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "payment_method_translation", "payment_method", column: "baseId", name: "FK_66187f782a3e71b9e0f5b50b68b", on_delete: :cascade
-  add_foreign_key "product", "asset", column: "featuredAssetId", name: "FK_91a19e6613534949a4ce6e76ff8", on_delete: :nullify
-  add_foreign_key "product_asset", "asset", column: "assetId", name: "FK_5888ac17b317b93378494a10620", on_delete: :cascade
-  add_foreign_key "product_asset", "product", column: "productId", name: "FK_0d1294f5c22a56da7845ebab72c", on_delete: :cascade
-  add_foreign_key "product_channels_channel", "channel", column: "channelId", name: "FK_a51dfbd87c330c075c39832b6e7", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_channels_channel", "product", column: "productId", name: "FK_26d12be3b5fec6c4adb1d792844", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_facet_values_facet_value", "facet_value", column: "facetValueId", name: "FK_06e7d73673ee630e8ec50d0b29f", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_facet_values_facet_value", "product", column: "productId", name: "FK_6a0558e650d75ae639ff38e413a", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_option", "product_option_group", column: "groupId", name: "FK_a6debf9198e2fbfa006aa10d710"
-  add_foreign_key "product_option_group", "product", column: "productId", name: "FK_a6e91739227bf4d442f23c52c75"
-  add_foreign_key "product_option_group_translation", "product_option_group", column: "baseId", name: "FK_93751abc1451972c02e033b766c", on_delete: :cascade
-  add_foreign_key "product_option_translation", "product_option", column: "baseId", name: "FK_a79a443c1f7841f3851767faa6d", on_delete: :cascade
-  add_foreign_key "product_translation", "product", column: "baseId", name: "FK_7dbc75cb4e8b002620c4dbfdac5"
-  add_foreign_key "product_variant", "asset", column: "featuredAssetId", name: "FK_0e6f516053cf982b537836e21cf", on_delete: :nullify
-  add_foreign_key "product_variant", "product", column: "productId", name: "FK_6e420052844edf3a5506d863ce6"
-  add_foreign_key "product_variant", "tax_category", column: "taxCategoryId", name: "FK_e38dca0d82fd64c7cf8aac8b8ef"
-  add_foreign_key "product_variant_asset", "asset", column: "assetId", name: "FK_10b5a2e3dee0e30b1e26c32f5c7", on_delete: :cascade
-  add_foreign_key "product_variant_asset", "product_variant", column: "productVariantId", name: "FK_fa21412afac15a2304f3eb35feb", on_delete: :cascade
-  add_foreign_key "product_variant_channels_channel", "channel", column: "channelId", name: "FK_d194bff171b62357688a5d0f559", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_variant_channels_channel", "product_variant", column: "productVariantId", name: "FK_beeb2b3cd800e589f2213ae99d6", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_variant_facet_values_facet_value", "facet_value", column: "facetValueId", name: "FK_0d641b761ed1dce4ef3cd33d559", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_variant_facet_values_facet_value", "product_variant", column: "productVariantId", name: "FK_69567bc225b6bbbd732d6c5455b", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_variant_options_product_option", "product_option", column: "productOptionId", name: "FK_e96a71affe63c97f7fa2f076dac", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_variant_options_product_option", "product_variant", column: "productVariantId", name: "FK_526f0131260eec308a3bd2b61b6", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "product_variant_price", "product_variant", column: "variantId", name: "FK_e6126cd268aea6e9b31d89af9ab", on_delete: :cascade
-  add_foreign_key "product_variant_translation", "product_variant", column: "baseId", name: "FK_420f4d6fb75d38b9dca79bc43b4", on_delete: :cascade
-  add_foreign_key "promotion_channels_channel", "channel", column: "channelId", name: "FK_0eaaf0f4b6c69afde1e88ffb52d", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "promotion_channels_channel", "promotion", column: "promotionId", name: "FK_6d9e2c39ab12391aaa374bcdaa4", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "promotion_translation", "promotion", column: "baseId", name: "FK_1cc009e9ab2263a35544064561b", on_delete: :cascade
-  add_foreign_key "refund", "payment", column: "paymentId", name: "FK_1c6932a756108788a361e7d4404"
-  add_foreign_key "region", "region", column: "parentId", name: "FK_ed0c8098ce6809925a437f42aec", on_delete: :nullify
-  add_foreign_key "region_translation", "region", column: "baseId", name: "FK_1afd722b943c81310705fc3e612", on_delete: :cascade
-  add_foreign_key "role_channels_channel", "channel", column: "channelId", name: "FK_e09dfee62b158307404202b43a5", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "role_channels_channel", "role", column: "roleId", name: "FK_bfd2a03e9988eda6a9d11760119", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "session", "channel", column: "activeChannelId", name: "FK_eb87ef1e234444728138302263b"
-  add_foreign_key "session", "order", column: "activeOrderId", name: "FK_7a75399a4f4ffa48ee02e98c059"
-  add_foreign_key "session", "user", column: "userId", name: "FK_3d2f174ef04fb312fdebd0ddc53"
-  add_foreign_key "shipping_line", "order", column: "orderId", name: "FK_c9f34a440d490d1b66f6829b86c", on_delete: :cascade
-  add_foreign_key "shipping_line", "shipping_method", column: "shippingMethodId", name: "FK_e2e7642e1e88167c1dfc827fdf3"
-  add_foreign_key "shipping_method_channels_channel", "channel", column: "channelId", name: "FK_f2b98dfb56685147bed509acc3d", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "shipping_method_channels_channel", "shipping_method", column: "shippingMethodId", name: "FK_f0a17b94aa5a162f0d422920eb2", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "shipping_method_translation", "shipping_method", column: "baseId", name: "FK_85ec26c71067ebc84adcd98d1a5", on_delete: :cascade
-  add_foreign_key "stock_level", "product_variant", column: "productVariantId", name: "FK_9950eae3180f39c71978748bd08", on_delete: :cascade
-  add_foreign_key "stock_level", "stock_location", column: "stockLocationId", name: "FK_984c48572468c69661a0b7b0494", on_delete: :cascade
-  add_foreign_key "stock_location_channels_channel", "channel", column: "channelId", name: "FK_ff8150fe54e56a900d5712671a0", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "stock_location_channels_channel", "stock_location", column: "stockLocationId", name: "FK_39513fd02a573c848d23bee587d", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "stock_movement", "order_line", column: "orderLineId", name: "FK_d2c8d5fca981cc820131f81aa83"
-  add_foreign_key "stock_movement", "product_variant", column: "productVariantId", name: "FK_e65ba3882557cab4febb54809bb"
-  add_foreign_key "stock_movement", "stock_location", column: "stockLocationId", name: "FK_a2fe7172eeae9f1cca86f8f573a", on_delete: :cascade
-  add_foreign_key "surcharge", "order", column: "orderId", name: "FK_154eb685f9b629033bd266df7fa", on_delete: :cascade
-  add_foreign_key "surcharge", "order_modification", column: "orderModificationId", name: "FK_a49c5271c39cc8174a0535c8088"
-  add_foreign_key "tax_rate", "customer_group", column: "customerGroupId", name: "FK_8b5ab52fc8887c1a769b9276caf"
-  add_foreign_key "tax_rate", "tax_category", column: "categoryId", name: "FK_7ee3306d7638aa85ca90d672198"
-  add_foreign_key "tax_rate", "zone", column: "zoneId", name: "FK_9872fc7de2f4e532fd3230d1915"
-  add_foreign_key "user_roles_role", "role", column: "roleId", name: "FK_4be2f7adf862634f5f803d246b8", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "user_roles_role", "user", column: "userId", name: "FK_5f9286e6c25594c6b88c108db77", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "zone_members_region", "region", column: "regionId", name: "FK_b45b65256486a15a104e17d495c", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "zone_members_region", "zone", column: "zoneId", name: "FK_433f45158e4e2b2a2f344714b22", on_update: :cascade, on_delete: :cascade
   create_trigger("accounts_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("accounts").
       after(:insert).

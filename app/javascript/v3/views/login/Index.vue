@@ -3,7 +3,7 @@
     class="flex flex-col bg-woot-25 min-h-screen w-full py-20 sm:px-6 lg:px-8 dark:bg-slate-900"
   >
     <section class="max-w-5xl mx-auto">
-      <img
+      <!-- <img
         :src="globalConfig.logo"
         :alt="globalConfig.installationName"
         class="mx-auto h-8 w-auto block dark:hidden"
@@ -14,6 +14,7 @@
         :alt="globalConfig.installationName"
         class="mx-auto h-8 w-auto hidden dark:block"
       />
+      -->
       <h2
         class="mt-6 text-center text-3xl font-medium text-slate-900 dark:text-woot-50"
       >

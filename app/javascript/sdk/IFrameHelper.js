@@ -312,8 +312,8 @@ export const IFrameHelper = {
 
   onLoad: ({ widgetColor }) => {
     //Execute the localstorage instance
-    // const email=localStorage.getItem("email");
-    // const name=localStorage.getItem("name");
+    const email=localStorage.getItem("email");
+    const name=localStorage.getItem("name");
     // let channel_id=localStorage.getItem("channel_id")
     
     // if(!channel_id){
@@ -348,9 +348,13 @@ export const IFrameHelper = {
     //   })
     // }
 
+   if(email && name){
+    window.$chatwoot.setUser(email,{
+      email:email,
+      name:name
+    })
+   }
    
-
-    
     const iframe = IFrameHelper.getAppFrame();
     iframe.style.visibility = '';
     iframe.setAttribute('id', `chatwoot_live_chat_widget`);

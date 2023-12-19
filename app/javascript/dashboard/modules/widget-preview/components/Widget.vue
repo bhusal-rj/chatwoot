@@ -14,7 +14,7 @@
         <WidgetFooter :config="getWidgetFooterConfig" />
         <div class="branding">
           <a class="branding-link">
-            <img class="branding-image" :src="globalConfig.logoThumbnail" />
+            <!-- <img class="branding-image" :src="globalConfig.logoThumbnail" /> -->
             <span>
               {{
                 useInstallationName(

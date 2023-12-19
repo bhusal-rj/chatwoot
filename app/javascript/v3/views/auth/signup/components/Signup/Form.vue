@@ -128,7 +128,7 @@ export default {
         required,
         email,
         businessEmailValidator(value) {
-          return CompanyEmailValidator.isCompanyEmail(value);
+          return true;
         },
       },
       password: {

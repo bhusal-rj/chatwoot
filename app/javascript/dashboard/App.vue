@@ -25,6 +25,7 @@
 </template>
 
 <script>
+
 import { mapGetters } from 'vuex';
 import AddAccountModal from '../dashboard/components/layout/sidebarComponents/AddAccountModal.vue';
 import LoadingState from './components/widgets/LoadingState.vue';
@@ -89,6 +90,9 @@ export default {
         this.initializeAccount();
       }
     },
+  },
+  beforeMount(){
+    document.title="HyperChat"
   },
   mounted() {
     this.initializeColorTheme();

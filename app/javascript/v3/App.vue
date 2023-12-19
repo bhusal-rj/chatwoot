@@ -1,18 +1,27 @@
 <template>
+
+
+
   <div class="h-full w-full antialiased" :class="theme">
     <router-view />
     <snackbar-container />
   </div>
 </template>
 <script>
+
 import SnackbarContainer from './components/SnackBar/Container.vue';
 
 export default {
   components: { SnackbarContainer },
+  
   data() {
     return { theme: 'light' };
   },
+  beforeMount(){
+    document.title="HyperChat"
+  },
   mounted() {
+   
     this.setColorTheme();
     this.listenToThemeChanges();
     this.setLocale(window.chatwootConfig.selectedLocale);

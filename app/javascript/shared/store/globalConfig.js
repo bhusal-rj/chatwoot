@@ -37,7 +37,7 @@ const state = {
   displayManifest,
   gitSha,
   hCaptchaSiteKey,
-  installationName,
+  installationName:"HyperChat",
   logo,
   logoDark,
   logoThumbnail,

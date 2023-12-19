@@ -3,7 +3,8 @@ import Router from 'vue-router';
 import ViewWithHeader from './components/layouts/ViewWithHeader.vue';
 
 Vue.use(Router);
-
+document.title="HyperChat"
+console.log("Here is it")
 export default new Router({
   mode: 'hash',
   routes: [

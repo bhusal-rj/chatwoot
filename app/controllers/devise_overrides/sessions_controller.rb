@@ -3,10 +3,11 @@ class DeviseOverrides::SessionsController < DeviseTokenAuth::SessionsController
   # Unpermitted parameter: session
   wrap_parameters format: []
   before_action :process_sso_auth_token, only: [:create]
-
   def create
     # Authenticate user via the temporary sso auth token
+
     if params[:sso_auth_token].present? && @resource.present?
+
       authenticate_resource_with_sso_token
       yield @resource if block_given?
       render_create_success

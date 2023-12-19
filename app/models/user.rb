@@ -56,10 +56,10 @@ class User < ApplicationRecord
          :rememberable,
          :trackable,
          :validatable,
-         :confirmable,
          :password_has_required_content,
          :omniauthable, omniauth_providers: [:google_oauth2]
 
+  # Add confirmable if required
   # TODO: remove in a future version once online status is moved to account users
   # remove the column availability from users
   enum availability: { online: 0, offline: 1, busy: 2 }

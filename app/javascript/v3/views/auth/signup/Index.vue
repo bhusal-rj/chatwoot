@@ -6,7 +6,7 @@
       >
         <div class="px-8 max-w-[560px] w-full overflow-auto">
           <div class="mb-4">
-            <img
+            <!-- <img
               :src="globalConfig.logo"
               :alt="globalConfig.installationName"
               class="h-8 w-auto block dark:hidden"
@@ -16,7 +16,7 @@
               :src="globalConfig.logoDark"
               :alt="globalConfig.installationName"
               class="h-8 w-auto hidden dark:block"
-            />
+            /> -->
             <h2
               class="mb-7 mt-6 text-left text-3xl font-medium text-slate-900 dark:text-woot-50"
             >
@@ -72,7 +72,7 @@ export default {
   computed: {
     ...mapGetters({ globalConfig: 'globalConfig/get' }),
     isAChatwootInstance() {
-      return this.globalConfig.installationName === 'Chatwoot';
+      return this.globalConfig.installationName === 'HyperChat';
     },
   },
   beforeMount() {

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div
     v-if="testimonials.length"
     class="hidden bg-woot-400 dark:bg-woot-800 overflow-hidden relative xl:flex flex-1"
@@ -14,7 +14,7 @@
     <img
       src="/assets/images/auth/auth--bg.svg"
       class="h-[96%] left-[6%] top-[8%] w-[96%] absolute"
-    />
+    /> 
     <div class="flex items-center justify-center flex-col h-full w-full z-50">
       <div class="flex items-start justify-center p-6">
         <testimonial-card
@@ -29,9 +29,8 @@
       </div>
     </div>
   </div>
-</template>
-
-<script>
+</template> -->
+ <script>
 import TestimonialCard from './TestimonialCard.vue';
 import { getTestimonialContent } from '../../../../../api/testimonials';
 export default {
@@ -55,9 +54,9 @@ export default {
     },
   },
 };
-</script>
+</script> 
 
 <style lang="scss" scoped>
 .center--img {
 }
-</style>
+</style> 
