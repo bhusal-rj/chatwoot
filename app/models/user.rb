@@ -56,6 +56,7 @@ class User < ApplicationRecord
          :rememberable,
          :trackable,
          :validatable,
+         :confirmable,
          :password_has_required_content,
          :omniauthable, omniauth_providers: [:google_oauth2]
 

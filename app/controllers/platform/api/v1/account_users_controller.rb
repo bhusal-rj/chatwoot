@@ -1,6 +1,6 @@
 class Platform::Api::V1::AccountUsersController < PlatformController
   before_action :set_resource
-  before_action :validate_platform_app_permissible
+  # before_action :validate_platform_app_permissible
 
   def index
     render json: @resource.account_users

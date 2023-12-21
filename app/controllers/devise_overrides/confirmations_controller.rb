@@ -4,8 +4,8 @@ class DeviseOverrides::ConfirmationsController < Devise::ConfirmationsController
   skip_before_action :authenticate_user!, raise: false
 
   def create
-    # @confirmable = User.find_by(confirmation_token: params[:confirmation_token])
-    @confirmable = true
+    @confirmable = User.find_by(confirmation_token: params[:confirmation_token])
+
     render_confirmation_success and return if @confirmable&.confirm
 
     render_confirmation_error
